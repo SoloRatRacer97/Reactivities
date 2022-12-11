@@ -26,7 +26,6 @@ function App() {
             </List.Item>
           ))}
         </List>
-        <p>This is a test</p>
     </div>
   );
 }
