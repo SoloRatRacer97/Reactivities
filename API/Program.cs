@@ -1,3 +1,4 @@
+using API.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 
@@ -6,35 +7,19 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<DataContext>(opt => 
-{
-    opt.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
-});
-
-// This is CORS (Coross Origin Resource Sharing).
-// We need this because our API is set up on lcoalhost 5000 and our frontent is listening on local host 3000. So, we need to create a Cors policy here to allow this cross domain sharing. This is later implimented below, before authorization.
-builder.Services.AddCors(opt => 
-{
-    opt.AddPolicy("CorsPolicy", policy => 
-    {
-        policy.AllowAnyMethod().AllowAnyHeader().WithOrigins("http://localhost:3000");
-    });
-});
+builder.Services.AddApplicationServices(builder.Configuration);
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+      app.UseSwagger();
+      app.UseSwaggerUI();
 }
 
 // Note that we need to use CORS bbefore authorization. 
-app.UseCors("CorsPolicy"); 
+app.UseCors("CorsPolicy");
 
 app.UseAuthorization();
 
@@ -45,14 +30,14 @@ var services = scope.ServiceProvider;
 
 try
 {
-    var context = services.GetRequiredService<DataContext>();
-    await context.Database.MigrateAsync();
-    await Seed.SeedData(context);
+      var context = services.GetRequiredService<DataContext>();
+      await context.Database.MigrateAsync();
+      await Seed.SeedData(context);
 }
 catch (Exception ex)
 {
-    var logger = services.GetRequiredService<ILogger<Program>>();
-    logger.LogError(ex, "An error occured during migration");
+      var logger = services.GetRequiredService<ILogger<Program>>();
+      logger.LogError(ex, "An error occured during migration");
 }
 
 app.Run();
