@@ -14,6 +14,16 @@ builder.Services.AddDbContext<DataContext>(opt =>
     opt.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
+// This is CORS (Coross Origin Resource Sharing).
+// We need this because our API is set up on lcoalhost 5000 and our frontent is listening on local host 3000. So, we need to create a Cors policy here to allow this cross domain sharing. This is later implimented below, before authorization.
+builder.Services.AddCors(opt => 
+{
+    opt.AddPolicy("CorsPolicy", policy => 
+    {
+        policy.AllowAnyMethod().AllowAnyHeader().WithOrigins("http://localhost:3000");
+    });
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -22,6 +32,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+// Note that we need to use CORS bbefore authorization. 
+app.UseCors("CorsPolicy"); 
 
 app.UseAuthorization();
 
