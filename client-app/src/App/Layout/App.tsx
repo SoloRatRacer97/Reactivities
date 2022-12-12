@@ -1,27 +1,33 @@
 import React, { Fragment, useEffect, useState } from "react";
-import axios from "axios";
 import { Container } from "semantic-ui-react";
 import { Activity } from "../models/activity";
 import Navbar from "./Navbar";
 import ActivityDashboard from "../../Features/activities/dashboard/ActivityDashboard";
 import {v4 as uuid} from 'uuid'
+import agent from "../api/agent";
+import LoadingComponent from "./LoadingComponent";
 
 function App() {
   // Here we are saying it is a type of activity, and will be an arrray.
   const [activities, setActivities] = useState<Activity[]>([]);
-
   const [selectedActivity, setSelectedActivity] = useState<
     Activity | undefined
   >(undefined);
-
   const [editMode, setEditMode] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
 
+  // Little confused here... Changing the date into a more readable date type?
   useEffect(() => {
-    // Again, making the return value of type Activity and an array.
-    axios
-      .get<Activity[]>("http://localhost:5000/api/activities")
+    agent.Activities.list()
       .then((response) => {
-        setActivities(response.data);
+        let activities: Activity[] = [];
+        response.forEach(activity => {
+          activity.date = activity.date.split('T')[0];
+          activities.push(activity);
+        })
+        setActivities(response);
+        setLoading(false);
       });
   }, []);
 
@@ -45,18 +51,36 @@ function App() {
   }
 
   function handleCreateOrEditActivity(activity: Activity) {
-    // Setting the actiivty to the selected one if there is one. If not, we are setting it to a blank activity I think...?
-    activity.id ? setActivities([...activities.filter(x => x.id !== activity.id), activity])
-    // Blank activity part..?:
-    : setActivities([...activities, {...activity, id: uuid()}])
-
-    setEditMode(false);
-    setSelectedActivity(activity)
+    setSubmitting(true);
+    if (activity.id) {
+      agent.Activities.update(activity).then(() => {
+        setActivities([...activities, {...activity, id: uuid()}])
+        setSelectedActivity(activity);
+        setEditMode(false);
+        setSubmitting(false);
+      }) 
+    } else {
+      activity.id = uuid();
+      agent.Activities.create(activity).then(() => {
+        setActivities([...activities, activity])
+        setSelectedActivity(activity);
+        setEditMode(false);
+        setSubmitting(false);
+      })
+    }
   }
 
   function handleDeleteActivity(id: string) {
+    setSubmitting(true);
+    agent.Activities.delete(id).then(() => {
+      // All the ids that are not equal tot he one that we got:
+       setActivities([...activities.filter(x => x.id !== id)]);
+       setSubmitting(false);
+    })
     setActivities([...activities.filter(x => x.id !== id)])
   }
+
+  if (loading) return <LoadingComponent content='Loading app'></LoadingComponent>
 
   return (
     // Keep in mind that we should use Fragemnts for wrapping elements. I think....
@@ -74,6 +98,7 @@ function App() {
           closeForm={handleFormClose}
           createOrEdit={handleCreateOrEditActivity}
           deleteActivity={handleDeleteActivity}
+          submitting={submitting}
         ></ActivityDashboard>
       </Container>
     </Fragment>
