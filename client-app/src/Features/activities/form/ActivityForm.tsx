@@ -1,20 +1,16 @@
+import { observer } from "mobx-react-lite";
 import React, { ChangeEvent, useState } from "react";
 import { Form, Segment, Button } from "semantic-ui-react";
 import { Activity } from "../../../App/models/activity";
+import { useStore } from "../../../App/stores/store";
 
-interface Props {
-  activity: Activity | undefined;
-  closeForm: () => void;
-  createOrEdit: (activity: Activity) => void;
-  submitting: boolean;
-}
 
-export default function ActivtyForm({
-  activity: selectedActivity,
-  closeForm,
-  createOrEdit,
-  submitting
-}: Props) {
+export default observer(function ActivtyForm() {
+
+  const {activityStore} = useStore();
+
+  const {selectedActivity, closeForm, createActivity, updateActivity, loading} = activityStore;
+
   const initialSatate = selectedActivity ?? {
     id: "",
     title: "",
@@ -28,7 +24,7 @@ export default function ActivtyForm({
   const [activity, setActivity] = useState(initialSatate);
 
   function handleSubmit() {
-      createOrEdit(activity);
+      activity.id ? updateActivity(activity) : createActivity(activity)
   }
 
   // This is a clever way of keeping React up to date on our inputs. Instead of hard coding the values and then updating them, we have React watch these input fields and save them as we change the inputs as we go. Pretty neat.
@@ -78,7 +74,7 @@ export default function ActivtyForm({
           onChange={handleInputChange}
         ></Form.Input>
         <Button
-        loading={submitting}
+        loading={loading}
           floated="right"
           positive
           type="submit"
@@ -93,4 +89,4 @@ export default function ActivtyForm({
       </Form>
     </Segment>
   );
-}
+})
