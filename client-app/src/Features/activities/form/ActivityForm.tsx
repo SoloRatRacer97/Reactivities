@@ -1,17 +1,24 @@
 import { observer } from "mobx-react-lite";
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useState, useEffect } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { Form, Segment, Button } from "semantic-ui-react";
-import { Activity } from "../../../App/models/activity";
 import { useStore } from "../../../App/stores/store";
+import { Activity } from "../../../App/models/activity";
+import LoadingComponent from "../../../App/Layout/LoadingComponent";
+import { v4 as uuid } from 'uuid';
 
 
 export default observer(function ActivtyForm() {
   // Getting the store:
   const {activityStore} = useStore();
   // Destructuring the store:
-  const {selectedActivity, closeForm, createActivity, updateActivity, loading} = activityStore;
+  const {createActivity, updateActivity, loading, loadActivity, loadingInitial} = activityStore;
 
-  const initialSatate = selectedActivity ?? {
+  const {id} = useParams();
+  const navigate = useNavigate();
+
+  // Basic default state of empty for the initial state for the activity
+  const [activity, setActivity] = useState<Activity> ({
     id: "",
     title: "",
     category: "",
@@ -19,11 +26,23 @@ export default observer(function ActivtyForm() {
     date: "",
     city: "",
     venue: "",
-  };
+  });
 
-  const [activity, setActivity] = useState(initialSatate);
+  // Recall that useEffect runs on startup. So this will set the activity to the whatever sctivity we get back from loading one
+  useEffect(() => {
+    // We are using an ! here for typscript to be happy since it thinkns that the actiivity we are returning needs to be a certain type but we know better. Come back and review this.. need to know more about TS in these cases.
+    if (id) loadActivity(id).then(activity => setActivity(activity!))
+    // Recall: Again, we need to set the dependancies here so we are not perpetually loading them over and over agian. not sure why I can never really remember this step...
+  }, [id, loadActivity]);
 
   function handleSubmit() {
+    if (!activity.id) {
+      activity.id = uuid();
+      createActivity(activity).then(() => navigate(`/activities/${activity.id}`))
+    } else {
+      updateActivity(activity).then(() => navigate(`/activities/${activity.id}`))
+    }
+
     // Open form will have checked for an id already and selected the activity for us, so no need to worry about that here. Instead, we are updating the selected form if an id exists and has been selected... OR we are createing one with a new uuid if no activity is selected. 
       activity.id ? updateActivity(activity) : createActivity(activity)
   }
@@ -33,6 +52,8 @@ export default observer(function ActivtyForm() {
     const { name, value } = event.target;
     setActivity({ ...activity, [name]: value });
   }
+
+  if (loadingInitial) return <LoadingComponent content='Loading activity...'></LoadingComponent>
 
   return (
     <Segment clearing>
@@ -82,7 +103,8 @@ export default observer(function ActivtyForm() {
           content="Submit"
         ></Button>
         <Button
-          onClick={closeForm}
+        as={Link}
+         to='/activities'
           floated="right"
           type="button"
           content="Cancel"
@@ -91,3 +113,4 @@ export default observer(function ActivtyForm() {
     </Segment>
   );
 })
+
