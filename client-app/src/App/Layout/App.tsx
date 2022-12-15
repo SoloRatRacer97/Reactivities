@@ -7,10 +7,9 @@ import { useStore } from "../stores/store";
 import { observer } from "mobx-react-lite";
 
 function App() {
-
+  // Destructuring the activityStore out of the store for now since we only need that "slice" from that part of the store
   const {activityStore} = useStore();
 
-  // Little confused here... Changing the date into a more readable date type?
   useEffect(() => {
     activityStore.loadActivities()
   }, [activityStore]);

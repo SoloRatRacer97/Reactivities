@@ -3,7 +3,7 @@ import ActivityStore from './activityStore';
 
 // This is making a store "handler" so we can impliment our store
 
-// Making an interface from ActivityStore
+// Making an interface to hold all of our stores
 interface Store {
       activityStore: ActivityStore
 }
@@ -13,10 +13,11 @@ export const store: Store = {
       activityStore: new ActivityStore()
 }
 
-// Exporting them to use in our app:
+// It looks like we are exporting the store into context
 export const StoreContext = createContext(store);
 
 // Custom React Hook to process our store:
+// Again, it looks like we are just using cotnext here.... Little odd?
 export function useStore() {
       return useContext(StoreContext);
 }

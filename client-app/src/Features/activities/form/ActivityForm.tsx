@@ -6,9 +6,9 @@ import { useStore } from "../../../App/stores/store";
 
 
 export default observer(function ActivtyForm() {
-
+  // Getting the store:
   const {activityStore} = useStore();
-
+  // Destructuring the store:
   const {selectedActivity, closeForm, createActivity, updateActivity, loading} = activityStore;
 
   const initialSatate = selectedActivity ?? {
@@ -24,6 +24,7 @@ export default observer(function ActivtyForm() {
   const [activity, setActivity] = useState(initialSatate);
 
   function handleSubmit() {
+    // Open form will have checked for an id already and selected the activity for us, so no need to worry about that here. Instead, we are updating the selected form if an id exists and has been selected... OR we are createing one with a new uuid if no activity is selected. 
       activity.id ? updateActivity(activity) : createActivity(activity)
   }
 
