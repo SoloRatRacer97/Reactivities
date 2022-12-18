@@ -4,7 +4,7 @@ import ActivityList from "./ActivityList";
 import { useStore } from "../../../App/stores/store";
 import { observer } from "mobx-react-lite";
 import LoadingComponent from "../../../App/Layout/LoadingComponent";
-import { LOADIPHLPAPI } from "dns";
+import ActivityFilters from './ActivityFilters';
 
 // Use object destructuring do get the activiites out and usable for the component
 export default observer(function AvtivictyDashboard() {
@@ -26,7 +26,7 @@ export default observer(function AvtivictyDashboard() {
         <ActivityList></ActivityList>
       </Grid.Column>
       <Grid.Column width="6">
-        <h2>Activity filters</h2>
+        <ActivityFilters></ActivityFilters>
       </Grid.Column>
     </Grid>
   );

@@ -27,6 +27,17 @@ export default class ActivityStore {
     );
   }
 
+  // IDK what the hell is going on here. Looks like we are grouping activities and returning them in an array that has the same elements, but is now grouped a certain way.
+  get groupedActivities() {
+    return Object.entries(
+      this.activitiesByDate.reduce((activities, activity) => {
+        const date = activity.date;
+        activities[date] = activities[date] ? [...activities[date], activity] : [activity];
+        return activities;
+      }, {} as {[key: string]: Activity[]})
+    )
+  }
+
   loadActivities = async () => {
     this.setLoadingInitial(true)
     try {
