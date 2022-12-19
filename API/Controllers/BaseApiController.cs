@@ -1,8 +1,10 @@
+using Application.Core;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
+    // Note that this ApiController automatically generates errors for us upon bad requests. Very helpful
     [ApiController]
     [Route("api/[controller]")]
     public class BaseApiController : ControllerBase
@@ -16,5 +18,15 @@ namespace API.Controllers
 
         // NOTE: ??= means that if the former value is null, we it to what comes after this operator
         protected IMediator Mediator => _mediator ??= HttpContext.RequestServices.GetService<IMediator>();
+
+        protected ActionResult HandleResult<T>(Result<T> result)
+        {
+            if (result == null) return NotFound();
+            if (result.IsSuccess && result.Value != null)
+                return Ok(result.Value);
+            if (result.IsSuccess && result.Value == null)
+                return NotFound();
+            return BadRequest(result.Error);
+        }
     }
 }
