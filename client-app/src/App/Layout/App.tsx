@@ -7,6 +7,7 @@ import { useStore } from "../stores/store";
 import { observer, useLocalObservable } from "mobx-react-lite";
 import { Outlet, useLocation } from "react-router-dom";
 import HomePage from "../../Features/home/HomePage";
+import { ToastContainer } from "react-toastify";
 
 function App() {
   const location = useLocation();
@@ -15,6 +16,7 @@ function App() {
     // Keep in mind that we should use Fragemnts for wrapping elements. I think....
     // Also, the shortcut for fragment is <>.
     <Fragment>
+      <ToastContainer position="bottom-right" hideProgressBar theme='colored'></ToastContainer>
       {location.pathname === "/" ? (
         <HomePage></HomePage>
       ) : (

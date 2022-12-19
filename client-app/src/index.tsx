@@ -3,6 +3,7 @@ import ReactDOM from "react-dom/client";
 // We are adding semantic-ui-css before our regular style sheet so that we can overwrite anything that we need to with out own styles after semantic-ui is loaded in.
 import "semantic-ui-css/semantic.min.css";
 import 'react-calendar/dist/Calendar.css'
+import 'react-toastify/dist/ReactToastify.min.css'
 import "./App/Layout/styles.css";
 import reportWebVitals from "./reportWebVitals";
 import { store, StoreContext } from "./App/stores/store";

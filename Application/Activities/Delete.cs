@@ -27,19 +27,21 @@ namespace Application.Activities
             }
             public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
             {
+                // Finding the actiivty from the database
                 var activity = await _context.Activities.FindAsync(request.Id);
-
+                // If it doesnt exist, return null. Makes sense.
                 if (activity == null) return null;
 
-                // This is deleting iyt from memeory
+                // This is deleting it from working memeory
                 _context.Remove(activity);
 
-                // This is saving it in memory:
+                // Creating a result varibale to see if any changes are saved.
                 var result = await _context.SaveChangesAsync() > 0;
 
+                // If changes are to be saved and result is false, then return the failure.
                 if (!result) return Result<Unit>.Failure("Failed to delete the activity");
 
-                // Again, we arent retutning anything for now:
+                // Again, we arent retutning anything for now since if we deleted something, we dont need ot return it back. Just let the front end know that it was OK.
                 return Result<Unit>.Success(Unit.Value);
             }
             }

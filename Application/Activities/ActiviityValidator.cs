@@ -4,6 +4,7 @@ using FluentValidation;
 
 namespace Application.Activities
 {
+    // This is the class that we made to handle the validation of you data. Each line will take in a rules for the type of data to be checked for
     public class ActiviityValidator : AbstractValidator<Activity>
     {
         public ActiviityValidator()

@@ -1,9 +1,12 @@
-import { createBrowserRouter, RouteObject } from "react-router-dom";
+import { createBrowserRouter, Navigate, RouteObject } from "react-router-dom";
 import ActivityDashboard from "../../Features/activities/dashboard/ActivityDashboard";
 import ActivityForm from "../../Features/activities/form/ActivityForm";
 import HomePage from "../../Features/home/HomePage";
 import App from "../Layout/App";
 import ActivityDetails from '../../Features/activities/details/ActivityDetails';
+import TestErrors from '../../Features/errors/TestError';
+import NotFound from "../../Features/errors/NotFound";
+import ServerError from "../../Features/errors/ServerError";
 
 // Defining our routes here:
 export const routes: RouteObject[] = [
@@ -18,6 +21,11 @@ export const routes: RouteObject[] = [
                   {path: 'activities/:id', element: <ActivityDetails></ActivityDetails>},
                   {path: 'createActivity', element: <ActivityForm key='create'></ActivityForm>},
                   {path: 'manage/:id', element: <ActivityForm key='manage'></ActivityForm>},
+                  {path: 'errors', element: <TestErrors></TestErrors>},
+                  {path: 'not-found', element: <NotFound></NotFound>},
+                  // This is the default path for anything that is not defined. We are just sending them to the not-found page right now
+                  {path: 'server-error', element: <ServerError></ServerError>},
+                  {path: '*', element: <Navigate replace to='/not-found' />}
             ]
       }
 ]

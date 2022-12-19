@@ -19,6 +19,7 @@ namespace API.Controllers
         // NOTE: ??= means that if the former value is null, we it to what comes after this operator
         protected IMediator Mediator => _mediator ??= HttpContext.RequestServices.GetService<IMediator>();
 
+        // Making a handler for the result after we check if the result exists and what the value is. 
         protected ActionResult HandleResult<T>(Result<T> result)
         {
             if (result == null) return NotFound();

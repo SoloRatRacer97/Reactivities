@@ -1,6 +1,10 @@
 // Axios is conencting our client side requests to our API. 
-import axios, { AxiosResponse } from "axios";
+import axios, { AxiosError, AxiosResponse } from "axios";
+import { toast } from "react-toastify";
+
 import { Activity } from "../models/activity";
+import { router } from "../router/Routes";
+import { store } from "../stores/store";
 
 // setting up a sleep function that takes a number and then sets a timeout for that specified number of miliseconds
 const sleep = (delay: number) => {
@@ -13,14 +17,43 @@ axios.defaults.baseURL = "http://localhost:5000/api";
 
 // Delay manualy made with axios to simulate grabbing data from a server.
 axios.interceptors.response.use(async (response) => {
-  try {
     await sleep(1000);
     return response;
-    // Sending the error and returing the promise if it fails:
-  } catch (error) {
-    console.log(error);
-    return await Promise.reject(error);
+
+}, (error: AxiosError) => {
+  const {data, status, config} = error.response as AxiosResponse;
+  switch (status) {
+    case 400:
+        if (config.method === 'get' && data.errors.hasOwnProperty('id')) {
+          router.navigate('/not-found')
+        }
+        if (data.errors) {
+          const modalStateErros = [];
+          for (const key in data.errors) {
+            if (data.errors[key]) {
+              modalStateErros.push(data.errors[key])
+            }
+          }
+          throw modalStateErros.flat();
+        } else {
+          toast.error(data)
+        }
+        break;
+    case 401: 
+        toast.error('unauthorised')
+        break;
+    case 403:
+        toast.error('forbidden')
+        break;
+    case 404:
+      router.navigate('/not-found');
+      break;
+    case 500:
+      store.commonStore.setServerError(data)
+      router.navigate('/server-error')
+        break;
   }
+  return Promise.reject(error)
 });
 
 // The <T> defines the type for this file. Then, we can use it below to specify the type.

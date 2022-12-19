@@ -17,7 +17,7 @@ namespace Application.Activities
         {
             public Activity Activity { get; set; }
         }
-        
+        // This is the same validator for our edit handler here as the create activity:
         public class CommandValidator : AbstractValidator<Command>
         {
             public CommandValidator()
@@ -49,7 +49,7 @@ namespace Application.Activities
                     
                     if (!result) return Result<Unit>.Failure("Failed to update activity.");
 
-                    // Again, we are retuning Unit.value since we are not reallllly returnign anything here since we are just updating the data.
+                    // Again, we are retuning Unit.value since we are not reallllly returning anything here since we are just updating the data. We just want to let it know what we did it. 
                     return Result<Unit>.Success(Unit.Value);
                   }
             }
