@@ -14,23 +14,29 @@ namespace API.Middleware
                   _env = env;
                   _logger = logger;
                   _next = next;
-            
         }
+        // Middleware needs to have InvokeAsync? Our application will look for middleware called this. 
         public async Task InvokeAsync(HttpContext context)
         {
             try
             {
+                // Default is trying to pass this on. If there is nothing to catch as an exception, go ahead and pass it right on by. Simple. 
                 await _next(context);
             }
             catch (Exception ex)
             {
+                // First we need to log the error and pass in the exception and the exception message
                 _logger.LogError(ex, ex.Message);
+                // Not sure what this is.... Sets up the response as json?
                 context.Response.ContentType = "application/json";
+                // Setting the error code to 500 for the server error. 
                 context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
-                // Simple turnary operator for checking if we are in deve mode and changing the error message acordingly
+                // Simple turnary operator for checking if we are in dev mode and changing the error message acordingly
                 var response = _env.IsDevelopment()
+                    // If we are in development send it as a message and stringify the message
                     ? new AppException(context.Response.StatusCode, ex.Message, ex.StackTrace?.ToString())
+                    // If not, just make it a general server error.
                     : new AppException(context.Response.StatusCode, "Internal Server Error");
 
                 // Formatting the Json object ourselves and putting it in an options object. 

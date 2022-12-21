@@ -32,7 +32,7 @@ namespace Application.Activities
                 // If it doesnt exist, return null. Makes sense.
                 if (activity == null) return null;
 
-                // This is deleting it from working memeory
+                // This is deleting it from working memeory, I think.
                 _context.Remove(activity);
 
                 // Creating a result varibale to see if any changes are saved.

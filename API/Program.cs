@@ -12,8 +12,7 @@ builder.Services.AddApplicationServices(builder.Configuration);
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-
+// Configuring the middleware to catch any of our esceptions and 
 app.UseMiddleware<ExceptionMiddleware>();
 
 if (app.Environment.IsDevelopment())
@@ -22,7 +21,7 @@ if (app.Environment.IsDevelopment())
       app.UseSwaggerUI();
 }
 
-// Note that we need to use CORS bbefore authorization. 
+// Note that we need to use CORS before authorization. 
 app.UseCors("CorsPolicy");
 
 app.UseAuthorization();

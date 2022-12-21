@@ -45,11 +45,12 @@ namespace Application.Activities
 
                     _mapper.Map(request.Activity, activity);
 
+                    // Checking to make sure the number of results is greater than 0:
                     var result = await _context.SaveChangesAsync() > 0;
                     
                     if (!result) return Result<Unit>.Failure("Failed to update activity.");
 
-                    // Again, we are retuning Unit.value since we are not reallllly returning anything here since we are just updating the data. We just want to let it know what we did it. 
+                    // Again, we are retuning Unit.value since we are not really returning anything here since we are just updating the data. We just want to let it know what we did it. 
                     return Result<Unit>.Success(Unit.Value);
                   }
             }

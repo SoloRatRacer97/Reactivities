@@ -23,6 +23,7 @@ namespace API.Controllers
         protected IMediator Mediator => _mediator ??= HttpContext.RequestServices.GetService<IMediator>();
 
         // Making a handler for the result after we check if the result exists and what the value is. 
+        // Again, we are always returning something because of the results object. Then, we use mediator and this ApiController to do something with the response depending on what we get back.
         protected ActionResult HandleResult<T>(Result<T> result)
         {
             if (result == null) return NotFound();

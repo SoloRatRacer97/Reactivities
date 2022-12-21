@@ -23,7 +23,7 @@ namespace Application.Activities
         {
             public CommandValidator()
             {
-                // Setting up a validator using fluent validation
+                // Setting up a validator using fluent validation. This is using the ActiivtyValidator class that we set up to validate each of the properties. Bascially, checking for non null values.
                 RuleFor(x => x.Activity).SetValidator(new ActiviityValidator());
             }
         }
@@ -45,6 +45,8 @@ namespace Application.Activities
                 // Then, if it is false, send back a failure with the result:
                 if (!result) return Result<Unit>.Failure("Failed to create activity");
 
+                // Else, return success and send the value which is nothing, but it will let our API know that this was successful.
+                // What value are we sending....? A null...?
                 return Result<Unit>.Success(Unit.Value);
             }
         }
