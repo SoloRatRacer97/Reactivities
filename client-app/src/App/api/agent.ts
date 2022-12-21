@@ -13,6 +13,7 @@ const sleep = (delay: number) => {
   });
 };
 
+// Setting base url to save us some typing
 axios.defaults.baseURL = "http://localhost:5000/api";
 
 // Delay manualy made with axios to simulate grabbing data from a server.
@@ -56,8 +57,7 @@ axios.interceptors.response.use(async (response) => {
   return Promise.reject(error)
 });
 
-// The <T> defines the type for this file. Then, we can use it below to specify the type.
-// The <T> is a "generic type" that we can reuse over and over again
+// This is a generic type. This way when we make the specific responses below, we can specify the typefor each activity request. This way we can ensure we are getting the correct data back and it fits the type we want.
 const responseBody = <T>(response: AxiosResponse<T>) => response.data;
 
 // Define requests for axios here where we pass back the data
@@ -69,7 +69,7 @@ const requests = {
   del: <T>(url: string) => axios.delete<T>(url).then(responseBody),
 };
 
-// Define a function for each of the functions we are going to use in our app:
+// Define a HTTP function for each of the functions we are going to use in our app:
 const Activities = {
   list: () => requests.get<Activity[]>("/activities"),
   details: (id: string) => requests.get<Activity>(`/activities/${id}`),
@@ -78,8 +78,7 @@ const Activities = {
   delete: (id: string) => axios.delete<void>(`/activities/${id}`)
 }
 
-// Just naming Activities under one variable, agent:
-// Why...?
+// Naming this class under agent and exporting it:
 const agent = {
   Activities,
 };

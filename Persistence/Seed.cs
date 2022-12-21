@@ -4,10 +4,13 @@ namespace Persistence
 {
     public class Seed
     {
+        // Static methods are used for creating a new itteration of the class. For example, instead of saying something like var new Seed = new Seed, we can just say Seed.SeedData and it will run it for us. Just kind of a convenient way of running things for later.
         public static async Task SeedData(DataContext context)
         {
+            // If there are activities, just return and do nothing.
             if (context.Activities.Any()) return;
             
+            // If there aren't activiites, create a new list of type Activity from the Activity below. 
             var activities = new List<Activity>
             {
                 new Activity

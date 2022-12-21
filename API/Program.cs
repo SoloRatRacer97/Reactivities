@@ -29,6 +29,9 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+// The 'using' word here essentailly trashes everything in the function after we are done using it. There is a garbage collector in .Net but we cannot controll when it runs and we want to clean things up manualy and endure we have control over when this gets taken out of memory. 
+
+// Basically, we only need the CreateScope for creating the database, then never again. Its a single use function for setting up the database and thats it. 
 using var scope = app.Services.CreateScope();
 var services = scope.ServiceProvider;
 

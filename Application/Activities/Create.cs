@@ -18,11 +18,12 @@ namespace Application.Activities
             // We are recieving this from our API:
             public Activity Activity { get; set; }
         }
-        // Setting up our validator. We are validating aginst the Command here in this case. Is it because the data will be in the request from our activity...? Why not keep it as activity here?
+        // Why are we validating aginst the command vs the activity here...?
         public class CommandValidator : AbstractValidator<Command>
         {
             public CommandValidator()
             {
+                // Setting up a validator using fluent validation
                 RuleFor(x => x.Activity).SetValidator(new ActiviityValidator());
             }
         }

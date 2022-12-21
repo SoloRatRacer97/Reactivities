@@ -10,7 +10,7 @@ namespace API.Controllers
     public class ActivitiesController : BaseApiController
     {
 
-        [HttpGet] //api/activities
+        [HttpGet] //this is the base url from BaseApiController and sets up a route at => api/activities
         public async Task<IActionResult> GetActivities()
         {
             // Here we are using the Mediator glabal variable that we set in the BaseApiController class
@@ -20,7 +20,6 @@ namespace API.Controllers
         [HttpGet("{id}")] //api/activities/___uuid___
         public async Task<IActionResult> GetActivity(Guid id)
         {
-
             return HandleResult(await Mediator.Send(new Details.Query{Id = id}));
         }
 

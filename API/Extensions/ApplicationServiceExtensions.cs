@@ -37,7 +37,9 @@ namespace API.Extensions
 
                   services.AddMediatR(typeof(List.Handler));
                   services.AddAutoMapper(typeof(MappingProfiles).Assembly);
+                  // Adding in fluent validation to the application:
                   services.AddFluentValidationAutoValidation();
+                  // Setting the validators to use the Create class to validate aginst
                   services.AddValidatorsFromAssemblyContaining<Create>();
 
                   return services;

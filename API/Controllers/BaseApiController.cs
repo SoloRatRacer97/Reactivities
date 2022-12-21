@@ -6,7 +6,10 @@ namespace API.Controllers
 {
     // Note that this ApiController automatically generates errors for us upon bad requests. Very helpful
     [ApiController]
+    // This is the base route that everything will be built on top of:
     [Route("api/[controller]")]
+
+    // Then again, deriving the context from the ControllerBase
     public class BaseApiController : ControllerBase
     {
         // Recall: Private = only usable in this class
