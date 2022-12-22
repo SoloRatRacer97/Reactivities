@@ -1,12 +1,29 @@
 using Domain;
+using Microsoft.AspNetCore.Identity;
 
 namespace Persistence
 {
     public class Seed
     {
-        // Static methods are used for creating a new itteration of the class. For example, instead of saying something like var new Seed = new Seed, we can just say Seed.SeedData and it will run it for us. Just kind of a convenient way of running things for later.
-        public static async Task SeedData(DataContext context)
+        // UserManager allows us to manage our users in Persistance store:
+        public static async Task SeedData(DataContext context, UserManager<AppUser> userManager)
         {
+
+            if(!userManager.Users.Any())
+            {
+                var users = new List<AppUser>
+                {
+                    new AppUser{DisplayName = "Bob", UserName="bob", Email = "bob@test.com"},
+                    new AppUser{DisplayName = "Tom", UserName="tom", Email = "tom@test.com"},
+                    new AppUser{DisplayName = "Jane", UserName="jane", Email = "jane@test.com"}
+                };
+                foreach (var user in users)
+                {   
+                    // Creating a passwrod for each of them:
+                    await userManager.CreateAsync(user, "Pa$$w0rd");
+                }
+            }
+
             // If there are activities, just return and do nothing.
             if (context.Activities.Any()) return;
             

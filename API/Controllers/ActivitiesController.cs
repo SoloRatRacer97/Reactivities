@@ -1,6 +1,7 @@
 using Application.Activities;
 using Domain;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
@@ -12,11 +13,13 @@ namespace API.Controllers
 
         [HttpGet] //this is the base url from BaseApiController and sets up a route at => api/activities
         public async Task<IActionResult> GetActivities()
-        {
+    {
             // Here we are using the Mediator glabal variable that we set in the BaseApiController class
             return HandleResult(await Mediator.Send(new List.Query()));
         }
 
+        // This little flag makes this path need to be authorized to use:
+        // [Authorize]
         [HttpGet("{id}")] //api/activities/___uuid___
         public async Task<IActionResult> GetActivity(Guid id)
         {
