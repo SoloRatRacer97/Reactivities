@@ -7,6 +7,7 @@ import { makeAutoObservable, runInAction } from "mobx";
 import agent from "../api/agent";
 import { Activity } from "../models/activity";
 import { v4 as uuid } from "uuid";
+import { format } from 'date-fns'
 
 // This is a specific store class that houses specific data. We can make as many of these as we want and are kind of like context slices for MobX.
 export default class ActivityStore {
@@ -23,15 +24,15 @@ export default class ActivityStore {
 
   get activitiesByDate() {
     return Array.from(this.activityRegistry.values()).sort(
-      (a, b) => Date.parse(a.date) - Date.parse(b.date)
-    );
+      (a, b) => a.date!.getTime() - b.date!.getTime());
   }
 
   // IDK what the hell is going on here. Looks like we are grouping activities and returning them in an array that has the same elements, but is now grouped a certain way.
   get groupedActivities() {
     return Object.entries(
       this.activitiesByDate.reduce((activities, activity) => {
-        const date = activity.date;
+        // Still do not get the whole split on T thing for the dates'/
+        const date = format(activity.date!, 'dd MMM yyyy')
         activities[date] = activities[date] ? [...activities[date], activity] : [activity];
         return activities;
       }, {} as {[key: string]: Activity[]})
@@ -85,8 +86,7 @@ export default class ActivityStore {
   };
 
   private setActivity = (activity: Activity) => {
-    // Again, making the date more readable and resetting it:
-    activity.date = activity.date.split("T")[0];
+    activity.date = new Date(activity.date!)
     // Making the registry set to the activity we are working with now. 
     this.activityRegistry.set(activity.id, activity);
   }

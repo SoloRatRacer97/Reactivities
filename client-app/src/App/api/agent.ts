@@ -26,6 +26,7 @@ axios.interceptors.response.use(
     const { data, status, config } = error.response as AxiosResponse;
     switch (status) {
       case 400:
+        // This is to send the user to a not found page if they dont have a valid Guid
         if (config.method === "get" && data.errors.hasOwnProperty("id")) {
           router.navigate("/not-found");
         }
