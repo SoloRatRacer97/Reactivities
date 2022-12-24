@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
 {
-
+    // Note that we are not using Mediator in this part of the application. Again, not super sure why... See 133 for more detail?
     [ApiController]
     [Route("api/[controller]")]
     public class AccountController : ControllerBase
@@ -18,7 +18,7 @@ namespace API.Controllers
             private readonly TokenService _tokenService;
         public AccountController(UserManager<AppUser> userManager, TokenService tokenService)
         {
-                  _tokenService = tokenService;
+            _tokenService = tokenService;
             _userManager = userManager;
         }
         

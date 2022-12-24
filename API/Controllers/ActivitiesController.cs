@@ -1,13 +1,12 @@
 using Application.Activities;
 using Domain;
-using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Persistence;
 
 namespace API.Controllers
 {
+    // Temporarily puting this in so we can test our app as we build it. Will comment out later
+    [AllowAnonymous]
     public class ActivitiesController : BaseApiController
     {
 

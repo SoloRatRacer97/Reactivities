@@ -14,7 +14,7 @@ namespace API.Extensions
             // This identity Core does not add redirection which prevents us from running into problems later on
             services.AddIdentityCore<AppUser>(opt => 
             {
-                // This condifures the rules for the password
+                // This configures the rules for the password
                 opt.Password.RequireNonAlphanumeric = false;
                 opt.User.RequireUniqueEmail = true;
             })
@@ -27,6 +27,7 @@ namespace API.Extensions
             {
                 opt.TokenValidationParameters = new TokenValidationParameters
                 {
+                    // Esnures the token is valid
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = key,
                     // Not validating aginst:
