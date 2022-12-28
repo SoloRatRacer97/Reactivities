@@ -1,19 +1,26 @@
 import { createContext, useContext } from 'react';
 import ActivityStore from './activityStore';
 import CommonStore from './commonStore';
+import UserStore from './userStore';
+import ModalStore from './modalStore';
+import modalStore from './modalStore';
 
-// This is making a store "handler" so we can impliment our store
+// This is making a store "handler" so we can impliment our store. This is using statewide conext to manage our state here
 
 // Making an interface to hold all of our stores
 interface Store {
       activityStore: ActivityStore
       commonStore: CommonStore
+      userStore: UserStore
+      modalStore: ModalStore
 }
 
 export const store: Store = {
       // Adding different stores into our store variable so we can access multiple of them
       activityStore: new ActivityStore(),
-      commonStore: new CommonStore()
+      commonStore: new CommonStore(),
+      userStore: new UserStore(),
+      modalStore: new ModalStore()
 }
 
 // It looks like we are exporting the store into context

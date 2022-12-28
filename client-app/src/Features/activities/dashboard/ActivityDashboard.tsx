@@ -18,7 +18,7 @@ export default observer(function AvtivictyDashboard() {
   }, [loadActivities, activityRegistry.size]);
 
   if (activityStore.loadingInitial)
-    return <LoadingComponent content="Loading..."></LoadingComponent>;
+    return <LoadingComponent content="Loading activities..."></LoadingComponent>;
 
   return (
     <Grid>

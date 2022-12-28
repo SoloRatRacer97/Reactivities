@@ -1,5 +1,8 @@
-// Axios is conencting our client side requests to our API.
+// Axios is conencting our client side requests to our API. This will make a bunch of methods that we can call whenever we need to have our frontend talk to our backend. 
+
+// Recall: Axios is kind of our fetch api for this project. Just a bit cleaner than JS's regular fetch apparently. 
 import axios, { AxiosError, AxiosResponse } from "axios";
+import { config } from "process";
 import { toast } from "react-toastify";
 
 import { Activity } from "../models/activity";
@@ -16,6 +19,18 @@ const sleep = (delay: number) => {
 
 // Setting base url to save us some typing
 axios.defaults.baseURL = "http://localhost:5000/api";
+
+// This is a generic type. This way when we make the specific responses below, we can specify the typefor each activity request. This way we can ensure we are getting the correct data back and it fits the type we want.
+const responseBody = <T>(response: AxiosResponse<T>) => response.data;
+
+axios.interceptors.request.use(config => {
+  const token = store.commonStore.token
+
+  // Setting the header with the token...? Not sure why...
+  // I think it is to send the token with each request so the server knows that we are authorized for our actions
+  if (token && config.headers) config.headers.Authorization = `Bearer ${token}`
+  return config;
+})
 
 // Delay manualy made with axios to simulate grabbing data from a server.
 axios.interceptors.response.use(
@@ -61,9 +76,6 @@ axios.interceptors.response.use(
   }
 );
 
-// This is a generic type. This way when we make the specific responses below, we can specify the typefor each activity request. This way we can ensure we are getting the correct data back and it fits the type we want.
-const responseBody = <T>(response: AxiosResponse<T>) => response.data;
-
 // Define requests for axios here where we pass back the data
 const requests = {
   get: <T>(url: string) => axios.get<T>(url).then(responseBody),
@@ -83,8 +95,9 @@ const Activities = {
   delete: (id: string) => axios.delete<void>(`/activities/${id}`),
 };
 
+// Defining a function to get the current user, log them in, and/or register them
 const Account = {
-  current: () => requests.get<User>('/acount'),
+  current: () => requests.get<User>('/account'),
   login: (user: UserFormValues) => requests.post<User>('/account/login', user),
   register: (user: UserFormValues) => requests.post<User>('/account/register', user)
 }

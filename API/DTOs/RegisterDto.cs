@@ -11,7 +11,7 @@ namespace API.DTOs
         public string Email { get; set; }
         [Required]
         // Regular expression for a complex password:
-        [RegularExpression("(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{4-8}$", ErrorMessage = "Password must be compelex")]
+        [RegularExpression("(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{4,8}$", ErrorMessage = "Password must be complex")]
         public string Password { get; set; }
         [Required]
         public string Username { get; set; }
