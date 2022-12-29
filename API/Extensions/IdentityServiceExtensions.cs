@@ -1,7 +1,9 @@
 using System.Text;
 using API.Services;
 using Domain;
+using Infrastructure.Security;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using Persistence;
 
@@ -36,6 +38,18 @@ namespace API.Extensions
                     ValidateAudience = false
                 };
             });
+
+            // Configuring the isHostRequirement into identity:
+            services.AddAuthorization(opt => 
+            {
+                opt.AddPolicy("IsActivityHost", policy => 
+                {
+                    policy.Requirements.Add(new IsHostRequirement());
+                });
+            });
+
+            // A refference for after things are completed?:
+            services.AddTransient<IAuthorizationHandler, IsHostRequirementHandler>();
 
             // This token service is scopped to the HTTP request. Need more info on this.....
             services.AddScoped<TokenService>();

@@ -11,7 +11,9 @@ namespace Domain
         public string Category { get; set; }
         public string City { get; set; }
         public string Venue { get; set; }
+        public bool isCancelled { get; set; }
         // This is what sets up the join on both rables for us, I think:
-        public ICollection<ActivityAttendee> Attendees { get; set; }
+        // Note that we need to initialize it so that we can add things to it. If this is set to null originally, then we cannot add anything to it later on.
+        public ICollection<ActivityAttendee> Attendees { get; set; } = new List<ActivityAttendee>();
     }
 }
