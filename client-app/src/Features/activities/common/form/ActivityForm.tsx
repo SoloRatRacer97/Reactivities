@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { Segment, Button, Header } from "semantic-ui-react";
 import { useStore } from "../../../../App/stores/store";
-import { Activity } from '../../../../App/models/activity';
+import { Activity, ActivityFormValues } from '../../../../App/models/activity';
 import LoadingComponent from "../../../../App/Layout/LoadingComponent";
 import { v4 as uuid } from "uuid";
 import { Formik, Form } from "formik";
@@ -30,15 +30,7 @@ export default observer(function ActivtyForm() {
   const navigate = useNavigate();
 
   // Basic default state of empty for the initial state for the activity
-  const [activity, setActivity] = useState<Activity>({
-    id: "",
-    title: "",
-    category: "",
-    description: "",
-    date: null,
-    city: "",
-    venue: "",
-  });
+  const [activity, setActivity] = useState<ActivityFormValues>(new ActivityFormValues());
 
   const validationSchema = Yup.object({
     title: Yup.string().required("The activity title is required"),
@@ -52,12 +44,12 @@ export default observer(function ActivtyForm() {
   // Recall that useEffect runs on startup. So this will set the activity to the whatever sctivity we get back from loading one
   useEffect(() => {
     // We are using an ! here for typscript to be happy since it thinkns that the actiivity we are returning needs to be a certain type but we know better. Come back and review this.. need to know more about TS in these cases.
-    if (id) loadActivity(id).then((activity) => setActivity(activity!));
+    if (id) loadActivity(id).then((activity) => setActivity(new ActivityFormValues(activity)));
     // Recall: Again, we need to set the dependancies here so we are not perpetually loading them over and over agian. not sure why I can never really remember this step...
   }, [id, loadActivity]);
 
-  function handleFormSubmit(activity: Activity) {
-    if (activity.id.length === 0) {
+  function handleFormSubmit(activity: ActivityFormValues) {
+    if (!activity.id) {
         let newActivity = {
             ...activity,
             id: uuid()
@@ -66,9 +58,6 @@ export default observer(function ActivtyForm() {
     } else {
       updateActivity(activity).then(() => navigate(`/activities/${activity.id}`))
     }
-
-    // Open form will have checked for an id already and selected the activity for us, so no need to worry about that here. Instead, we are updating the selected form if an id exists and has been selected... OR we are createing one with a new uuid if no activity is selected.
-      activity.id ? updateActivity(activity) : createActivity(activity)
   }
 
   if (loadingInitial)
@@ -110,7 +99,7 @@ export default observer(function ActivtyForm() {
             <MyTextInut placeholder="Venue" name="venue"></MyTextInut>
             <Button
               disabled={isSubmitting || !dirty || !isValid}
-              loading={loading}
+              loading={isSubmitting}
               floated="right"
               positive
               type="submit"

@@ -5,9 +5,12 @@
 // Recall: to get components to talk to the activityStore, we need to wrap them in an observer. That way, the componentns 'observe' what is going on an can report back to the state.
 import { makeAutoObservable, runInAction } from "mobx";
 import agent from "../api/agent";
-import { Activity } from "../models/activity";
+import { Activity, ActivityFormValues } from '../models/activity';
 import { v4 as uuid } from "uuid";
 import { format } from 'date-fns'
+import userStore from './userStore';
+import { store } from "./store";
+import { Profile } from "../models/profile";
 
 // This is a specific store class that houses specific data. We can make as many of these as we want and are kind of like context slices for MobX.
 export default class ActivityStore {
@@ -86,6 +89,14 @@ export default class ActivityStore {
   };
 
   private setActivity = (activity: Activity) => {
+    const user = store.userStore.user;
+    if (user) {
+      activity.isGoing = activity.attendees!.some(
+        a => a.username === user.username
+      )
+      activity.isHost = activity.hostUsername === user.username;
+      activity.host = activity.attendees?.find(x => x.username === activity.hostUsername)
+    }
     activity.date = new Date(activity.date!)
     // Making the registry set to the activity we are working with now. 
     this.activityRegistry.set(activity.id, activity);
@@ -96,39 +107,35 @@ export default class ActivityStore {
   };
 
   createActivity = async (activity: Activity) => {
-    this.loading = true;
-    activity.id = uuid();
+    const user = store.userStore.user;
+    const attendee = new Profile(user!);
     try {
       await agent.Activities.create(activity);
+      const newActivity = new Activity(activity);
+      newActivity.hostUsername = user!.username;
+      newActivity.attendees = [attendee];
+      this.setActivity(newActivity)
       runInAction(() => {
-        this.activityRegistry.set(activity.id, activity);
-        this.selectedActivity = activity;
-        this.editMode = false;
-        this.loading = false;
+        this.selectedActivity = newActivity;
       });
     } catch (error) {
       console.log(error);
-      runInAction(() => {
-        this.loading = false;
-      });
+      };
     }
-  };
+  
 
-  updateActivity = async (activity: Activity) => {
-    this.loading = true;
+  updateActivity = async (activity: ActivityFormValues) => {
     try {
       await agent.Activities.update(activity);
       runInAction(() => {
-        this.activityRegistry.set(activity.id, activity);
-        this.selectedActivity = activity;
-        this.editMode = false;
-        this.loading = false;
+        if (activity.id) {
+          let updatedActivity = {...this.getActivity(activity.id), ...activity}
+          this.activityRegistry.set(activity.id, updatedActivity as Activity)
+          this.selectedActivity = updatedActivity as Activity;
+        }
       });
     } catch (error) {
       console.log(error);
-      runInAction(() => {
-        this.loading = false;
-      });
     }
   };
 
@@ -147,4 +154,27 @@ export default class ActivityStore {
       });
     }
   };
+
+  updateAttendance = async () => {
+    const user = store.userStore.user;
+    this.loading = true;
+    try {
+      await agent.Activities.attend(this.selectedActivity!.id)
+      runInAction(() => {
+        if (this.selectedActivity?.isGoing) {
+          this.selectedActivity.attendees = this.selectedActivity.attendees?.filter(a => a.username !== user?.username);
+          this.selectedActivity.isGoing = false;
+        } else {
+          const attendee = new Profile(user!);
+          this.selectedActivity?.attendees?.push(attendee);
+          this.selectedActivity!.isGoing = true
+        }
+        this.activityRegistry.set(this.selectedActivity!.id, this.selectedActivity!)
+      })
+    } catch (error) {
+      console.log(error);
+    } finally {
+      runInAction(() => this.loading = false)
+    }
+  }
 }
