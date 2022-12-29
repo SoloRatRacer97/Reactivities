@@ -11,5 +11,7 @@ namespace Domain
         public string Category { get; set; }
         public string City { get; set; }
         public string Venue { get; set; }
+        // This is what sets up the join on both rables for us, I think:
+        public ICollection<ActivityAttendee> Attendees { get; set; }
     }
 }

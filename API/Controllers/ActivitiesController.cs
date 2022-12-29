@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace API.Controllers
 {
     // Temporarily puting this in so we can test our app as we build it. Will comment out later
-    [AllowAnonymous]
+    // [AllowAnonymous]
     public class ActivitiesController : BaseApiController
     {
 
