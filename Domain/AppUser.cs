@@ -1,3 +1,5 @@
+// Sets up the joins for our tables
+
 using Microsoft.AspNetCore.Identity;
 
 namespace Domain
@@ -9,5 +11,7 @@ namespace Domain
         public string Bio { get; set; }
         // This is what sets up the join on both rables for us, I think:
         public ICollection<ActivityAttendee> Activities { get; set; }
+        // Joining the photo entitiy. I think?
+        public ICollection<Photo> Photos { get; set; }
     }
 }

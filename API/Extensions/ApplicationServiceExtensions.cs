@@ -3,6 +3,7 @@ using Application.Core;
 using Application.Interfaces;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using Infrastructure.Photos;
 using Infrastructure.Security;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -42,6 +43,10 @@ namespace API.Extensions
                   // Adding two services for our infrastrucure project. 
                   services.AddHttpContextAccessor();
                   services.AddScoped<IUserAccessor, UserAccessor>();
+                  // Adding the interface for the photo accessor
+                  services.AddScoped<IPhotoAccessor, PhotoAccessor>();
+                  // Adding services for Cloudinary
+                  services.Configure<CloudinarySettings>(config.GetSection("Cloudinary"));
 
                   return services;
             }

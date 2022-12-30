@@ -1,3 +1,6 @@
+// Sets up our database
+// 1) Names the tables in the db.
+
 using Domain;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -14,6 +17,9 @@ namespace Persistence
 
         // This is another Dbset for the joined tables. 
         public DbSet<ActivityAttendee> ActivityAttendees { get; set; }
+
+        // Setting up a table for photos in the database incase we want to query that data.
+        public DbSet<Photo> Photos { get; set; }
 
         // Need to override the IdentityDbContext.... Not sure why..?
         // This is the configuration to our many to many relationship:
