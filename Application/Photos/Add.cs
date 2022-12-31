@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Persistence;
 using System.Linq;
 
-namespace Infrastructure.Photos
+namespace Application.Photos
 {
     public class Add
     {
