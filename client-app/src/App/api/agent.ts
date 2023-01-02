@@ -6,9 +6,11 @@ import { config } from "process";
 import { toast } from "react-toastify";
 
 import { Activity, ActivityFormValues } from '../models/activity';
+import { Photo, Profile } from "../models/profile";
 import { User, UserFormValues } from "../models/user";
 import { router } from "../router/Routes";
 import { store } from "../stores/store";
+import { Form } from 'semantic-ui-react';
 
 // setting up a sleep function that takes a number and then sets a timeout for that specified number of miliseconds
 const sleep = (delay: number) => {
@@ -103,10 +105,24 @@ const Account = {
   register: (user: UserFormValues) => requests.post<User>('/account/register', user)
 }
 
+const Profiles = {
+  get: (username: string) => requests.get<Profile>(`/profiles/${username}`),
+  uploadPhoto: (file: any) => {
+      let formData = new FormData();
+      formData.append('File', file);
+      return axios.post<Photo>('photos', formData, {
+          headers: {'Content-Type': 'multipart/form-data'}
+      })
+  },
+  setMainPhoto: (id: string) => axios.post(`/photos/${id}/setMain`, {}),
+  deletePhoto: (id: string) => axios.delete(`/photos/${id}`)
+}
+
 // Naming this class under agent and exporting it:
 const agent = {
   Activities,
-  Account
+  Account,
+  Profiles
 };
 
 export default agent;
