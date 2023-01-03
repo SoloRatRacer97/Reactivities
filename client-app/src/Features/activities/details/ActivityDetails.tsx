@@ -5,7 +5,7 @@ import { useStore } from "../../../App/stores/store";
 import { observer } from "mobx-react-lite";
 import { useParams } from "react-router-dom";
 import ActivityDetailedInfo from "./ActivityDetailedInfo";
-import ActivityDetauledChat from './ActivityDetailedChat';
+import ActivityDetailedChat from './ActivityDetailedChat';
 import ActivityDetailedSideBar from "./ActivityDetailedSideBar";
 import ActivityDetailedHeader from "./ActivityDetailedHeader";
 
@@ -14,13 +14,13 @@ import ActivityDetailedHeader from "./ActivityDetailedHeader";
 export default observer(function ActivityDetails() {
 
   const {activityStore} = useStore();
-  const {selectedActivity: activity, loadActivity, loadingInitial} = activityStore;
+  const {selectedActivity: activity, loadActivity, loadingInitial, clearSelectedActivity} = activityStore;
   const {id} = useParams();
 
   useEffect(() => {
     if (id) loadActivity(id);
-
-  },[id, loadActivity]);
+    return () => clearSelectedActivity();
+  },[id, loadActivity, clearSelectedActivity]);
 
   if (loadingInitial || !activity) return<LoadingComponent></LoadingComponent>
 
@@ -29,7 +29,7 @@ export default observer(function ActivityDetails() {
       <Grid.Column width={10}>
     <ActivityDetailedHeader activity={activity}></ActivityDetailedHeader>
     <ActivityDetailedInfo activity={activity}></ActivityDetailedInfo>
-    <ActivityDetauledChat></ActivityDetauledChat>
+    <ActivityDetailedChat activityId={activity.id}></ActivityDetailedChat>
       </Grid.Column>
       <Grid.Column width={6}>
         <ActivityDetailedSideBar activity={activity}></ActivityDetailedSideBar>

@@ -6,6 +6,7 @@ import ModalStore from './modalStore';
 import modalStore from './modalStore';
 import { Profile } from '../models/profile';
 import ProfileStore from './profileStore';
+import CommentStore from './commentStore';
 
 // This is making a store "handler" so we can impliment our store. This is using statewide conext to manage our state here
 
@@ -16,6 +17,7 @@ interface Store {
       userStore: UserStore
       modalStore: ModalStore
       profileStore: ProfileStore;
+      commentStore: CommentStore;
 }
 
 export const store: Store = {
@@ -24,7 +26,8 @@ export const store: Store = {
       commonStore: new CommonStore(),
       userStore: new UserStore(),
       modalStore: new ModalStore(),
-      profileStore: new ProfileStore()
+      profileStore: new ProfileStore(),
+      commentStore: new CommentStore()
 }
 
 // It looks like we are exporting the store into context

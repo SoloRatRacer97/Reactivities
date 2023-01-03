@@ -16,11 +16,6 @@ export default observer(function ProfilePage() {
     if (username) loadProfile(username);
   }, [loadProfile, username]);
 
-  // Siple useEffect to reset the scroll to the top of the page.
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-
   if (loadingProfile)
     return <LoadingComponent inverted content="Loading profile..." />;
 
