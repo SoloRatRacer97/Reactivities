@@ -1,8 +1,7 @@
-import { Button, Grid, Header, Image } from "semantic-ui-react";
+import { Button, Grid, Header } from "semantic-ui-react";
 import PhotoWidgetDropzone from "./PhotoWidgetDropzone";
 import { useState, useEffect } from "react";
 import PhotoWidgetCropper from "./PhotoWidgetCropper";
-import { upload } from '@testing-library/user-event/dist/upload';
 
 interface Props {
   loading: boolean;

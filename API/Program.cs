@@ -1,5 +1,6 @@
 using API.Extensions;
 using API.Middleware;
+using API.SignalR;
 using Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -39,6 +40,8 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapHub<ChatHub>("/chat");
 
 // The 'using' word here essentailly trashes everything in the function after we are done using it. There is a garbage collector in .Net but we cannot controll when it runs and we want to clean things up manualy and endure we have control over when this gets taken out of memory. 
 

@@ -1,10 +1,8 @@
-import { isThisQuarter } from 'date-fns';
 import { makeAutoObservable, runInAction } from 'mobx';
 import { toast } from 'react-toastify';
 import agent from '../api/agent';
 import { Photo, Profile } from '../models/profile';
 import { store } from './store';
-import userStore from './userStore';
 // Mobx class that handles the state management in React vs Redux. 
 // 1) Handeling 
 

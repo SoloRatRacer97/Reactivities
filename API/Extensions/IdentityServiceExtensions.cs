@@ -1,3 +1,5 @@
+// Need to do some homework on this one to understand it better:
+
 using System.Text;
 using API.Services;
 using Domain;
@@ -37,6 +39,21 @@ namespace API.Extensions
                     // Not validating aginst:
                     ValidateAudience = false
                 };
+                // Something to do with the chat elelment that was in sect 19:
+                opt.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context => 
+                    {
+                        var accessToken = context.Request.Query["access_token"];
+                        var path = context.HttpContext.Request.Path;
+                        if (!string.IsNullOrEmpty(accessToken) && (path.StartsWithSegments("/chat")))
+                        {
+                            context.Token = accessToken;
+                        }
+                        return Task.CompletedTask;
+                    }
+                };
+
             });
 
             // Configuring the isHostRequirement into identity:

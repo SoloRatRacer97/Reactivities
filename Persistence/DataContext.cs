@@ -20,6 +20,8 @@ namespace Persistence
 
         // Setting up a table for photos in the database incase we want to query that data.
         public DbSet<Photo> Photos { get; set; }
+        // Setting up the table for the comments:
+        public DbSet<Comment> Comments { get; set; }
 
         // Need to override the IdentityDbContext.... Not sure why..?
         // This is the configuration to our many to many relationship:
@@ -40,6 +42,12 @@ namespace Persistence
             .HasOne(u => u.Activity)
             .WithMany(a => a.Attendees)
             .HasForeignKey(aa => aa.ActivityId);
+
+            builder.Entity<Comment>()
+                .HasOne(a => a.Activity)
+                .WithMany(c => c.Comments)
+                // This cascades the deletion down through the comments if we delete an activity. 
+                .OnDelete(DeleteBehavior.Cascade);
         }      
     }
 }

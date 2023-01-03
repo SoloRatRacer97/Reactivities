@@ -2,7 +2,6 @@
 
 // Recall: Axios is kind of our fetch api for this project. Just a bit cleaner than JS's regular fetch apparently. 
 import axios, { AxiosError, AxiosResponse } from "axios";
-import { config } from "process";
 import { toast } from "react-toastify";
 
 import { Activity, ActivityFormValues } from '../models/activity';
@@ -10,7 +9,6 @@ import { Photo, Profile } from "../models/profile";
 import { User, UserFormValues } from "../models/user";
 import { router } from "../router/Routes";
 import { store } from "../stores/store";
-import { Form } from 'semantic-ui-react';
 
 // setting up a sleep function that takes a number and then sets a timeout for that specified number of miliseconds
 const sleep = (delay: number) => {
