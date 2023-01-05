@@ -39,7 +39,7 @@ namespace API.Extensions
                     // Not validating aginst:
                     ValidateAudience = false
                 };
-                // Something to do with the chat elelment that was in sect 19:
+                // This is setting up SignalR Authentication since we cannot authenticate like normal with signalR 
                 opt.Events = new JwtBearerEvents
                 {
                     OnMessageReceived = context => 

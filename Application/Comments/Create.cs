@@ -42,9 +42,9 @@ namespace Application.Comments
 
                   public async Task<Result<CommentDto>> Handle(Command request, CancellationToken cancellationToken)
                   {
-                    // Grabbing the current user:
+                    // Grabbing the current activity:
                     var activity = await _context.Activities.FindAsync(request.ActivityId);
-                    // If current user is null, return null
+                    // If activity user is null, return null
                     if (activity == null) return null;
 
                     var user = await _context.Users
