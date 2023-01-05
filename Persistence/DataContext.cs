@@ -22,6 +22,8 @@ namespace Persistence
         public DbSet<Photo> Photos { get; set; }
         // Setting up the table for the comments:
         public DbSet<Comment> Comments { get; set; }
+        // Setting up a table for the following and followers functionality
+        public DbSet<UserFollowing> UserFollowings { get; set; }
 
         // Need to override the IdentityDbContext.... Not sure why..?
         // This is the configuration to our many to many relationship:
@@ -48,6 +50,21 @@ namespace Persistence
                 .WithMany(c => c.Comments)
                 // This cascades the deletion down through the comments if we delete an activity. 
                 .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<UserFollowing>(b => {
+                b.HasKey(k => new {k.ObserverId, k.TargetId});
+
+                b.HasOne(o => o.Observer)
+                    .WithMany(f => f.Followings)
+                    .HasForeignKey(o => o.ObserverId)
+                    // Here we DO want to delete the followings if the user deletes their profile. So, we will use cascade here again just like with the comments feature so that if the user doesnt exist, their followings and followers are also dropped form the databse.
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                b.HasOne(t => t.Target)
+                    .WithMany(f => f.Followers)
+                    .HasForeignKey(t => t.TargetId)
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
         }      
     }
 }

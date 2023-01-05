@@ -13,5 +13,8 @@ namespace Domain
         public ICollection<ActivityAttendee> Activities { get; set; }
         // Joining the photo entitiy. I think?
         public ICollection<Photo> Photos { get; set; }
+
+        public ICollection<UserFollowing> Followings { get; set; }
+        public ICollection<UserFollowing> Followers { get; set; }
     }
 }
