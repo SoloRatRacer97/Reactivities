@@ -1,12 +1,9 @@
 import { observer } from "mobx-react-lite";
 import {
-  Button,
   Divider,
   Grid,
   Header,
   Item,
-  Reveal,
-  RevealContent,
   Segment,
   Statistic,
 } from "semantic-ui-react";

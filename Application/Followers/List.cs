@@ -37,22 +37,25 @@ namespace Application.Followers
                     var profiles = new List<Profiles.Profile>();
                     // Setting up a switch statement for sending differenet requests. Not sure why...?
                     // Review this at 226.
-                    switch (request.Predicate)
-                    {
-                        case "followers":
-                            profiles = await _context.UserFollowings.Where(x => x.Target.UserName == request.Username)
-                            .Select(u => u.Observer)
-                            .ProjectTo<Profiles.Profile>(_mapper.ConfigurationProvider, new {currentUsername = _userAccessor.GetUsername()})
-                            .ToListAsync();
-                        break;
-
-                        case "following":
-                            profiles = await _context.UserFollowings.Where(x => x.Observer.UserName == request.Username)
-                            .Select(u => u.Target)
-                            .ProjectTo<Profiles.Profile>(_mapper.ConfigurationProvider)
-                            .ToListAsync();
-                        break;
-                    }
+                        switch (request.Predicate)
+                        {
+                            case "followers":
+                                profiles = await _context.UserFollowings.Where(x => x.Target.UserName == request.Username)
+                                    .Select(u => u.Observer)
+                                    .ProjectTo<Profiles.Profile>(_mapper.ConfigurationProvider, 
+                                        // Bug below:
+                                        new {currentUsername = _userAccessor.GetUsername()})
+                                    .ToListAsync();
+                                break;
+                            case "following":
+                                profiles = await _context.UserFollowings.Where(x => x.Observer.UserName == request.Username)
+                                    .Select(u => u.Target)
+                                    .ProjectTo<Profiles.Profile>(_mapper.ConfigurationProvider, 
+                                        // Bug below:
+                                        new {currentUsername = _userAccessor.GetUsername()})
+                                    .ToListAsync();
+                                break;
+                        }
 
                     return Result<List<Profiles.Profile>>.Success(profiles);
                   }
