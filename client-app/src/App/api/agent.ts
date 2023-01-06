@@ -113,7 +113,11 @@ const Profiles = {
       })
   },
   setMainPhoto: (id: string) => axios.post(`/photos/${id}/setMain`, {}),
-  deletePhoto: (id: string) => axios.delete(`/photos/${id}`)
+  deletePhoto: (id: string) => axios.delete(`/photos/${id}`),
+  updateProfile: (profile: Partial<Profile>) => requests.put(`/profiles`, profile),
+  updateFollowing: (username: string) => requests.post(`/follow/${username}`, {}),
+  listFollowings: (username: string, predicate: string) => requests
+      .get<Profile[]>(`/follow/${username}?predicate=${predicate}`)
 }
 
 // Naming this class under agent and exporting it:
