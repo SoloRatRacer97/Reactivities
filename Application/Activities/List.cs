@@ -12,9 +12,11 @@ namespace Application.Activities
 {
       public class List
     {
-        public class Query : IRequest<Result<List<ActivityDto>>> {}
+        public class Query : IRequest<Result<PagedList<ActivityDto>>> {
+            public PagingParams Params { get; set; }
+        }
 
-            public class Handler : IRequestHandler<Query, Result<List<ActivityDto>>>
+            public class Handler : IRequestHandler<Query, Result<PagedList<ActivityDto>>>
             {
 
                   private readonly IMapper _mapper;
@@ -30,18 +32,17 @@ namespace Application.Activities
                     
                 }
                 // Returning a list of activities:
-                  public async Task<Result<List<ActivityDto>>> Handle(Query request, CancellationToken cancellationToken)
+                  public async Task<Result<PagedList<ActivityDto>>> Handle(Query request, CancellationToken cancellationToken)
                   {
                         // Here we are adding functionality to retrun the attendees, and the app user as well as the cancellationToken.
-                        var activities = await _context.Activities
+                        var query = _context.Activities
                         // Adding in this project to allows us to only return data from the database that we NEED. Before this, we were sending a bunch of data that we didint need in the app.
                         .ProjectTo<ActivityDto>(_mapper.ConfigurationProvider, new {currentUsername = _userAccessor.GetUsername()})
-                        .ToListAsync(cancellationToken);
-                        
-                        // I think this is mapping the activity to the activity Dto that we made... Need to review this specifically
-                        // var activitiesToReturn = _mapper.Map<List<ActivityDto>>(activities);
+                        .AsQueryable();
 
-                        return Result<List<ActivityDto>>.Success(activities);
+                        return Result<PagedList<ActivityDto>>.Success(
+                              await PagedList<ActivityDto>.CreateAsync(query, request.Params.PageNumber, request.Params.PageSize)
+                        );
                   }
             }
       }

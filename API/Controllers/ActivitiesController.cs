@@ -1,4 +1,5 @@
 using Application.Activities;
+using Application.Core;
 using Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,10 +12,10 @@ namespace API.Controllers
     {
 
         [HttpGet] //this is the base url from BaseApiController and sets up a route at => api/activities
-        public async Task<IActionResult> GetActivities()
+        public async Task<IActionResult> GetActivities([FromQuery]PagingParams param)
     {
             // Here we are using the Mediator glabal variable that we set in the BaseApiController class
-            return HandleResult(await Mediator.Send(new List.Query()));
+            return HandleResult(await Mediator.Send(new List.Query{Params = param}));
         }
 
         // This little flag makes this path need to be authorized to use:
