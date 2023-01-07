@@ -10,7 +10,7 @@ import { v4 as uuid } from "uuid";
 import { format } from "date-fns";
 import { store } from "./store";
 import { Profile } from "../models/profile";
-import { Pagination } from "../models/pagination";
+import { Pagination, PagingParams } from "../models/pagination";
 
 
 // This is a specific store class that houses specific data. We can make as many of these as we want and are kind of like context slices for MobX.
@@ -21,10 +21,22 @@ export default class ActivityStore {
   loading = false;
   loadingInitial = false;
   pagination: Pagination | null = null;
+  pagingParams = new PagingParams();
 
   constructor() {
     // By making this auto oberservable, we can let MobX figure out that we need to use this class as an observable
     makeAutoObservable(this);
+  }
+
+  setPagingParams = (pagingParams: PagingParams) => {
+    this.pagingParams = pagingParams
+  }
+
+  get axiosParams() {
+    const params = new URLSearchParams();
+    params.append('pageNumber', this.pagingParams.pageNumber.toString());
+    params.append('pageSize', this.pagingParams.pageSize.toString());
+    return params;
   }
 
   get activitiesByDate() {
@@ -50,7 +62,7 @@ export default class ActivityStore {
   loadActivities = async () => {
     this.setLoadingInitial(true);
     try {
-      const result = await agent.Activities.list();
+      const result = await agent.Activities.list(this.axiosParams);
       result.data.forEach((activity) => {
         this.setActivity(activity);
       });

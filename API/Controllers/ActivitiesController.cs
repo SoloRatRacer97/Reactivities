@@ -12,7 +12,7 @@ namespace API.Controllers
     {
 
         [HttpGet] //this is the base url from BaseApiController and sets up a route at => api/activities
-        public async Task<IActionResult> GetActivities([FromQuery]PagingParams param)
+        public async Task<IActionResult> GetActivities([FromQuery]ActivityParams param)
     {
             // Here we are using the Mediator glabal variable that we set in the BaseApiController class
             return HandlePagedResult(await Mediator.Send(new List.Query{Params = param}));

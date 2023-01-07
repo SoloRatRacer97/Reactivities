@@ -3,7 +3,6 @@
 // Recall: Axios is kind of our fetch api for this project. Just a bit cleaner than JS's regular fetch apparently. 
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { toast } from "react-toastify";
-
 import { Activity, ActivityFormValues } from '../models/activity';
 import { PaginatedResult } from '../models/pagination';
 import { Photo, Profile } from "../models/profile";
@@ -93,7 +92,8 @@ const requests = {
 
 // Define a HTTP function for each of the functions we are going to use in our app:
 const Activities = {
-  list: () => requests.get<PaginatedResult<Activity[]>>("/activities"),
+  list: (params: URLSearchParams) => axios.get<PaginatedResult<Activity[]>>("/activities", {params})
+    .then(responseBody),
   details: (id: string) => requests.get<Activity>(`/activities/${id}`),
   create: (activity: ActivityFormValues) => requests.post<void>("/activities", activity),
   update: (activity: ActivityFormValues) => 
