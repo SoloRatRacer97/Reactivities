@@ -10,6 +10,8 @@ import { v4 as uuid } from "uuid";
 import { format } from "date-fns";
 import { store } from "./store";
 import { Profile } from "../models/profile";
+import { Pagination } from "../models/pagination";
+
 
 // This is a specific store class that houses specific data. We can make as many of these as we want and are kind of like context slices for MobX.
 export default class ActivityStore {
@@ -18,6 +20,7 @@ export default class ActivityStore {
   editMode = false;
   loading = false;
   loadingInitial = false;
+  pagination: Pagination | null = null;
 
   constructor() {
     // By making this auto oberservable, we can let MobX figure out that we need to use this class as an observable
@@ -47,16 +50,21 @@ export default class ActivityStore {
   loadActivities = async () => {
     this.setLoadingInitial(true);
     try {
-      const activities = await agent.Activities.list();
-      activities.forEach((activity) => {
+      const result = await agent.Activities.list();
+      result.data.forEach((activity) => {
         this.setActivity(activity);
       });
+      this.setPagination(result.pagination)
       this.setLoadingInitial(false);
     } catch (error) {
       console.log(error);
       this.setLoadingInitial(false);
     }
   };
+
+  setPagination = (pagination: Pagination) => {
+    this.pagination = pagination;
+  }
 
   // To load one activity for when we click on the View button:
   loadActivity = async (id: string) => {

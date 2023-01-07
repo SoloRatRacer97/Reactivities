@@ -36,9 +36,11 @@ namespace Application.Activities
                   {
                         // Here we are adding functionality to retrun the attendees, and the app user as well as the cancellationToken.
                         var query = _context.Activities
+                              .OrderBy(d => d.Date)
                         // Adding in this project to allows us to only return data from the database that we NEED. Before this, we were sending a bunch of data that we didint need in the app.
-                        .ProjectTo<ActivityDto>(_mapper.ConfigurationProvider, new {currentUsername = _userAccessor.GetUsername()})
-                        .AsQueryable();
+                              .ProjectTo<ActivityDto>(_mapper.ConfigurationProvider, new {currentUsername = _userAccessor.GetUsername()})
+                              // Recall that we are waiting to esecute this command until we have all the available parameters.
+                              .AsQueryable();
 
                         return Result<PagedList<ActivityDto>>.Success(
                               await PagedList<ActivityDto>.CreateAsync(query, request.Params.PageNumber, request.Params.PageSize)

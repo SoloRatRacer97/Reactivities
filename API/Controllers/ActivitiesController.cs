@@ -15,7 +15,7 @@ namespace API.Controllers
         public async Task<IActionResult> GetActivities([FromQuery]PagingParams param)
     {
             // Here we are using the Mediator glabal variable that we set in the BaseApiController class
-            return HandleResult(await Mediator.Send(new List.Query{Params = param}));
+            return HandlePagedResult(await Mediator.Send(new List.Query{Params = param}));
         }
 
         // This little flag makes this path need to be authorized to use:
