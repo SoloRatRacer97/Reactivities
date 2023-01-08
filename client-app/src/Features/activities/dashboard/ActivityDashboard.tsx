@@ -8,6 +8,7 @@ import ActivityFilters from "./ActivityFilters";
 import { useState } from "react";
 import { PagingParams } from "../../../App/models/pagination";
 import InfiniteScroll from "react-infinite-scroller";
+import ActivityListItemPlaceholder from "./ActivityListItemPlaceholder";
 
 // Use object destructuring do get the activiites out and usable for the component
 export default observer(function AvtivictyDashboard() {
@@ -29,26 +30,28 @@ export default observer(function AvtivictyDashboard() {
     if (activityRegistry.size <= 1) loadActivities();
   }, [loadActivities, activityRegistry.size]);
 
-  if (activityStore.loadingInitial && !loadingNext)
-    return (
-      <LoadingComponent content="Loading activities..."></LoadingComponent>
-    );
-
   return (
     <Grid>
       <Grid.Column width="10">
-        <InfiniteScroll
-          pageStart={0}
-          loadMore={handleGetNext}
-          hasMore={
-            !loadingNext &&
-            !!pagination &&
-            pagination.currentPage < pagination.totalPages
-          }
-          initialLoad={false}
-        >
-          <ActivityList></ActivityList>
-        </InfiniteScroll>
+        {activityStore.loadingInitial && !loadingNext ? (
+          <>
+            <ActivityListItemPlaceholder />
+            <ActivityListItemPlaceholder />
+          </>
+        ) : (
+          <InfiniteScroll
+            pageStart={0}
+            loadMore={handleGetNext}
+            hasMore={
+              !loadingNext &&
+              !!pagination &&
+              pagination.currentPage < pagination.totalPages
+            }
+            initialLoad={false}
+          >
+            <ActivityList></ActivityList>
+          </InfiniteScroll>
+        )}
       </Grid.Column>
       <Grid.Column width="6">
         <ActivityFilters></ActivityFilters>

@@ -14,7 +14,6 @@ namespace Application.Profiles
         {
             public string Username { get; set; }
         }
-
             public class Handler : IRequestHandler<Query, Result<Profile>>
             {
                 private readonly DataContext _context;
@@ -26,7 +25,6 @@ namespace Application.Profiles
                     _mapper = mapper;
                     _context = context;
                 }
-
                 public async Task<Result<Profile>> Handle(Query request, CancellationToken cancellationToken)
                 {
                     // Grabbing the user. Need more context on how though...
