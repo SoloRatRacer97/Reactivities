@@ -9,6 +9,7 @@ import NotFound from "../../Features/errors/NotFound";
 import ServerError from "../../Features/errors/ServerError";
 import LoginForm from '../../Features/users/LoginForm';
 import ProfilePage from "../../Features/profiles/ProfilePage";
+import RequireAuth from "./RequireAuth";
 
 // Defining our routes here:
 export const routes: RouteObject[] = [
@@ -18,25 +19,25 @@ export const routes: RouteObject[] = [
     // Specify what you want at that path:
     element: <App />,
     children: [
-      { path: "activities", element: <ActivityDashboard></ActivityDashboard> },
-      // With Raect Router 6 we do not need to worry about cascading routes like this, React will know.
-      { path: "activities/:id", element: <ActivityDetails></ActivityDetails> },
-      {
-        path: "createActivity",
-        element: <ActivityForm key="create"></ActivityForm>,
-      },
-      {
-        path: "manage/:id",
-        element: <ActivityForm key="manage"></ActivityForm>,
-      },
-      {
-        path: "profiles/:username",
-        element: <ProfilePage></ProfilePage>,
-      },
-      {
-        path: "login",
-        element: <LoginForm></LoginForm>,
-      },
+      // Putting these elements inside the RequireAtuth allows us to redirect the user around when they are not signed in:
+      {element: <RequireAuth></RequireAuth>, children: [
+        { path: "activities", element: <ActivityDashboard></ActivityDashboard> },
+        // With Raect Router 6 we do not need to worry about cascading routes like this, React will know.
+        { path: "activities/:id", element: <ActivityDetails></ActivityDetails> },
+        {
+          path: "createActivity",
+          element: <ActivityForm key="create"></ActivityForm>,
+        },
+        {
+          path: "manage/:id",
+          element: <ActivityForm key="manage"></ActivityForm>,
+        },
+        {
+          path: "profiles/:username",
+          element: <ProfilePage></ProfilePage>,
+        },
+      ]},
+
       { path: "errors", element: <TestErrors></TestErrors> },
       { path: "not-found", element: <NotFound></NotFound> },
       // This is the default path for anything that is not defined. We are just sending them to the not-found page right now

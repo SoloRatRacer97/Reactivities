@@ -5,7 +5,7 @@ import ActivityDashboard from "../../Features/activities/dashboard/ActivityDashb
 import LoadingComponent from "./LoadingComponent";
 import { useStore } from "../stores/store";
 import { observer, useLocalObservable } from "mobx-react-lite";
-import { Outlet, useLocation } from "react-router-dom";
+import { Outlet, ScrollRestoration, useLocation } from "react-router-dom";
 import HomePage from "../../Features/home/HomePage";
 import { ToastContainer } from "react-toastify";
 import ModalContainer from "../../Features/activities/common/modal/ModalContainer";
@@ -29,6 +29,8 @@ function App() {
     // Keep in mind that we should use Fragemnts for wrapping elements. I think....
     // Also, the shortcut for fragment is <>.
     <Fragment>
+      {/* Simple scroll restoration: */}
+      <ScrollRestoration></ScrollRestoration>
       <ModalContainer></ModalContainer>
       <ToastContainer position="bottom-right" hideProgressBar theme='colored'></ToastContainer>
       {location.pathname === "/" ? (
