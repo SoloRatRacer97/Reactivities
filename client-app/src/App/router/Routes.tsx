@@ -1,13 +1,11 @@
 import { createBrowserRouter, Navigate, RouteObject } from "react-router-dom";
 import ActivityDashboard from "../../Features/activities/dashboard/ActivityDashboard";
 import ActivityForm from "../../Features/activities/common/form/ActivityForm";
-import HomePage from "../../Features/home/HomePage";
 import App from "../Layout/App";
 import ActivityDetails from "../../Features/activities/details/ActivityDetails";
 import TestErrors from "../../Features/errors/TestError";
 import NotFound from "../../Features/errors/NotFound";
 import ServerError from "../../Features/errors/ServerError";
-import LoginForm from '../../Features/users/LoginForm';
 import ProfilePage from "../../Features/profiles/ProfilePage";
 import RequireAuth from "./RequireAuth";
 

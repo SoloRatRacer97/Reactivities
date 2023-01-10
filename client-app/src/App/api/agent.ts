@@ -17,8 +17,9 @@ const sleep = (delay: number) => {
   });
 };
 
-// Setting base url to save us some typing
-axios.defaults.baseURL = "http://localhost:5000/api";
+// Setting base url to save us some typing. 
+// Now, we are using the environment variables depending on if we are in production or in development
+axios.defaults.baseURL = process.env.REACT_APP_API_URL;
 
 // This is a generic type. This way when we make the specific responses below, we can specify the typefor each activity request. This way we can ensure we are getting the correct data back and it fits the type we want.
 const responseBody = <T>(response: AxiosResponse<T>) => response.data;
@@ -35,7 +36,7 @@ axios.interceptors.request.use(config => {
 // Delay manualy made with axios to simulate grabbing data from a server.
 axios.interceptors.response.use(
   async (response) => {
-    await sleep(1000);
+    if(process.env.NODE_ENV ==='development') await sleep(1000);
     const pagination = response.headers['pagination'];
     if (pagination) {
       response.data = new PaginatedResult(response.data, JSON.parse(pagination))
